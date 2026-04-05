@@ -111,6 +111,15 @@ files:
     config globals 'globals'
         option ula_prefix 'auto'
 
+- path: /etc/config/system
+  generator: dump
+  content: |
+    # disable ntp because jails don't work
+    config timeserver 'ntp'
+        option enabled '0'
+  types:
+    - container
+
 packages:
   manager: apk
   update: false
@@ -167,8 +176,6 @@ actions:
 
     # Disable process isolation to make dnsmasq work
     sed -i 's/procd_add_jail/: \0/g' /etc/init.d/dnsmasq
-    # Disable conflicting sysntpd service to avoid crash loop
-    rm -f /etc/rc.d/*sysntpd
   types:
     - container
 
